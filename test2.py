@@ -39,7 +39,8 @@ def mail(err):
     msg['Subject'] = 'ALARM! Broken feed'
 
     # Message creating
-    body = 'Hi, i am your feed about forbes data, i have some problems. ' + str(err)
+    body = 'Hi, i am your feed about forbes data, '
+    body += 'i have some problems. ' + str(err)
     msg.attach(MIMEText(body, 'plain'))
 
     # Sending message
@@ -90,7 +91,8 @@ def db_add(df):
     # Inserting data to DB
     try:
         for i, row in df.iterrows():
-            sql = "INSERT INTO `forbes` (`" + cols + "`) VALUES (" + "%s,"*(len(row)-1) + "%s)"
+            sql = "INSERT INTO `forbes` (`" + cols + "`) "
+            sql += "VALUES (" + "%s,"*(len(row)-1) + "%s)"
             cursor.execute(sql, tuple(row))
             connection.commit()
     except:
@@ -126,7 +128,8 @@ def start(now, end):
     """ Function for starting application """
     # Connecting to API and getting raw data
     while str(now) != str(end):
-        url = f'https://openexchangerates.org/api/historical/{str(end)}.json?app_id=c54e441aec6c4f42a2cb17d81a675cae'
+        url = f'https://openexchangerates.org/api/historical/{str(end)}'
+        url += '.json?app_id=c54e441aec6c4f42a2cb17d81a675cae'
         try:
             data = requests.get(url)
         except:
@@ -142,10 +145,10 @@ def start(now, end):
 # Parameter processing
 try:
     if argv[1:]:
-        date_par = ''
-        for i in argv[1:]:
-            date_par += i
-        start(date_now, datetime.datetime.strptime(date_par, "%Y-%m-%d").date())
+        date_par = ''.join([str(i) for i in argv[1:]])
+        date_par = datetime.datetime.strptime(date_par, "%Y-%m-%d")
+        date_par = date_par.date()
+        start(date_now, date_par)
     else:
         start(date_now, date_end)
 except:
