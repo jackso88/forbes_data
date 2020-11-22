@@ -19,7 +19,7 @@ def logining(txt):
     """ Function for loginning """
     logging.basicConfig(
                         filename='test2.log',
-                        filemode='w',
+                        filemode='a',
                         format='%(name)s - %(levelname)s - %(message)s'
                        )
     logging.warning(txt)
@@ -67,7 +67,7 @@ def db_add(df):
                                     db='test'
                                     )
     except:
-        err = "I can't connect with DB server" + str(date_now)
+        err = "I can't connect with DB server. " + str(date_now)
         mail(err)
         logining(err)
 
