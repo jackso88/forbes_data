@@ -130,7 +130,8 @@ def start(now, end):
     """ Function for starting application """
     # Connecting to API and getting raw data
     while str(now) != str(end):
-        url = config['start']['url']
+        url = f"https://openexchangerates.org/api/historical/{str(end)}"
+        url += f".json?app_id={str(config['start']['app_id'])}"
         try:
             data = requests.get(url)
         except:
