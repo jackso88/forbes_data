@@ -1,7 +1,0 @@
-# Ignore Logs
-logs
-*.log
-
-# Ignore Configs
-configs
-*.yaml
