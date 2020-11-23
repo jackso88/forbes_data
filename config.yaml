@@ -1,7 +1,8 @@
 loggining:
     filename: 'test2.log'
     filemode: 'a'
-    format: '%(name)s - %(levelname)s - %(message)s'
+    format: '%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s'
+    levels: logging.DEBUG
 mail:
     addr_from: "herokusite@gmail.com"
     addr_to: "andreilukin88@gmail.com"

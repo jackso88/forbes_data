@@ -20,15 +20,18 @@ date_now = datetime.datetime.now().date()
 date_end = date_now - datetime.timedelta(days=config['common']['days'])
 
 
-def logining(txt):
+def logining(txt=str('Program started. ')):
     """ Function for loginning """
     logging.basicConfig(
                         filename=config['loggining']['filename'],
                         filemode=config['loggining']['filemode'],
+                        level=logging.DEBUG,
                         format=config['loggining']['format']
                        )
-    txt += str(date_now)
-    logging.warning(txt)
+    if 'started' in txt:
+        logging.info(txt)
+    else:
+        logging.error(txt)
 
 
 def mail(err):
@@ -129,6 +132,7 @@ def clear_data(dt, date):
 def start(now, end):
     """ Function for starting application """
     # Connecting to API and getting raw data
+    logining()
     while str(now) != str(end):
         url = f"https://openexchangerates.org/api/historical/{str(end)}"
         url += f".json?app_id={str(config['start']['app_id'])}"

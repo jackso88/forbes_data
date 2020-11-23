@@ -1,1 +1,17 @@
-root - WARNING - I can't get data on API. 2020-11-23
+test2.py[LINE:34]# ERROR    [2020-11-23 15:51:32,025]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 15:54:48,735]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 15:55:10,813]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 15:55:34,534]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 15:57:03,320]  I can't start. 
+test2.py[LINE:35]# ERROR    [2020-11-23 15:57:34,778]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 15:59:19,293]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 15:59:53,212]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 16:08:30,525]  I can't start. 
+test2.py[LINE:34]# ERROR    [2020-11-23 16:09:18,325]  I can't start. 
+test2.py[LINE:32]# INFO     [2020-11-23 16:09:32,430]  Program started. 
+connectionpool.py[LINE:957]# DEBUG    [2020-11-23 16:09:32,436]  Starting new HTTPS connection (1): openexchangerates.org:443
+connectionpool.py[LINE:428]# DEBUG    [2020-11-23 16:09:33,270]  https://openexchangerates.org:443 "GET /api/historical/2020-11-20.json?app_id=c54e441aec6c4f42a2cb17d81a675cae HTTP/1.1" 200 None
+connectionpool.py[LINE:957]# DEBUG    [2020-11-23 16:09:38,495]  Starting new HTTPS connection (1): openexchangerates.org:443
+connectionpool.py[LINE:428]# DEBUG    [2020-11-23 16:09:39,324]  https://openexchangerates.org:443 "GET /api/historical/2020-11-21.json?app_id=c54e441aec6c4f42a2cb17d81a675cae HTTP/1.1" 200 None
+connectionpool.py[LINE:957]# DEBUG    [2020-11-23 16:09:44,641]  Starting new HTTPS connection (1): openexchangerates.org:443
+connectionpool.py[LINE:428]# DEBUG    [2020-11-23 16:09:45,464]  https://openexchangerates.org:443 "GET /api/historical/2020-11-22.json?app_id=c54e441aec6c4f42a2cb17d81a675cae HTTP/1.1" 200 None
