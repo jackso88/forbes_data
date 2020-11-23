@@ -79,7 +79,7 @@ def db_add(df):
     table = config['db_add']['table']
     cols = "`,`".join([str(i) for i in df.columns.tolist()])
 
-    # Deleting data from DB
+    # Transfer data to DB
     try:
         for i, row in df.iterrows():
             info = dict(row)
