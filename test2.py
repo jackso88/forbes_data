@@ -80,6 +80,7 @@ def db_add(df):
     cols = "`,`".join([str(i) for i in df.columns.tolist()])
 
     # Transfer data to DB
+    cursor.execute('START TRANSACTION;')
     try:
         for i, row in df.iterrows():
             info = dict(row)
@@ -95,7 +96,7 @@ def db_add(df):
         err = config['db_add']['err_del']
         mail(err)
         logining(err)
-
+    cursor.execute('COMMIT;')
     connection.commit()
     connection.close()
 
