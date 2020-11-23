@@ -1,0 +1,27 @@
+loggining:
+    filename: 'test2.log'
+    filemode: 'a'
+    format: '%(name)s - %(levelname)s - %(message)s'
+mail:
+    addr_from: "herokusite@gmail.com"
+    addr_to: "andreilukin88@gmail.com"
+    password: "hb1641012"
+    body: 'Hi, i am your feed about forbes data, i have some problems. '
+    subj: 'ALARM! Broken feed'
+db_add:
+    host: 'localhost'
+    user: 'andrei'
+    password: 'Hb1641012'
+    db: 'test'
+    table: 'forbes'
+    err_add: "I can't create data at DB. "
+    err_del: "I can't delete data from DB. "
+    err_con: "I can't connect with DB server. "
+start:
+    app_id: 'c54e441aec6c4f42a2cb17d81a675cae'
+    err_str: "I can't get data on API. "
+common:
+    days: 3
+    err_com: "I can't start. "
+
+    

@@ -3,6 +3,7 @@ import datetime
 import smtplib
 import pymysql
 import logging
+import yaml
 import pandas as pd
 from sys import argv
 from email.mime.multipart import MIMEMultipart
@@ -10,49 +11,49 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
 
+# Reading configuration file
+with open("config.yaml", "r") as f:
+    config = yaml.load(f)
+
 # Default time slice
 date_now = datetime.datetime.now().date()
-date_end = date_now - datetime.timedelta(days=3)
+date_end = date_now - datetime.timedelta(days=config['common']['days'])
 
 
 def logining(txt):
     """ Function for loginning """
     logging.basicConfig(
-                        filename='test2.log',
-                        filemode='a',
-                        format='%(name)s - %(levelname)s - %(message)s'
+                        filename=config['loggining']['filename'],
+                        filemode=config['loggining']['filemode'],
+                        format=config['loggining']['format']
                        )
+    txt += str(date_now)
     logging.warning(txt)
 
 
 def mail(err):
     """ Function for sending mail """
     # Data for autorization
-    addr_from = "herokusite@gmail.com"
-    addr_to = "andreilukin88@gmail.com"
-    password = "hb1641012"
+    addr_from = config['mail']['addr_from']
+    addr_to = config['mail']['addr_to']
+    password = config['mail']['password']
 
     # Filling in the address and subject of the message
     msg = MIMEMultipart()
     msg['From'] = addr_from
     msg['To'] = addr_to
-    msg['Subject'] = 'ALARM! Broken feed'
+    msg['Subject'] = config['mail']['subj']
 
     # Message creating
-    body = 'Hi, i am your feed about forbes data, '
-    body += 'i have some problems. ' + str(err)
+    body = config['mail']['body'] + str(err) + str(date_now)
     msg.attach(MIMEText(body, 'plain'))
 
     # Sending message
     server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.set_debuglevel(True)
+    server.set_debuglevel(False)
     server.starttls()
     server.login(addr_from, password)
-    try:
-        server.send_message(msg)
-    except:
-        err = 'I lost your mail. ' + str(date_now)
-        logining(err)
+    server.send_message(msg)
     server.quit()
 
 
@@ -61,28 +62,29 @@ def db_add(df):
     # Connect to DB
     try:
         connection = pymysql.connect(
-                                    host='localhost',
-                                    user='andrei',
-                                    password='Hb1641012',
-                                    db='test'
+                                host=config['db_add']['host'],
+                                user=config['db_add']['user'],
+                                password=config['db_add']['password'],
+                                db=config['db_add']['db']
                                     )
     except:
-        err = "I can't connect with DB server. " + str(date_now)
+        err = config['db_add']['err_con']
         mail(err)
         logining(err)
 
     cursor = connection.cursor()
+    table = config['db_add']['table']
 
     # Deleting data from DB
     try:
         for i, row in df.iterrows():
             info = dict(row)
             cursor.execute(
-                "DELETE FROM `forbes` WHERE date=%s", (info['date'])
+                f"DELETE FROM `{table}` WHERE date=%s", (info['date'])
                 )
             connection.commit()
     except:
-        err = "I can't delete data from DB. " + str(date_now)
+        err = config['db_add']['err_del']
         mail(err)
         logining(err)
 
@@ -91,12 +93,12 @@ def db_add(df):
     # Inserting data to DB
     try:
         for i, row in df.iterrows():
-            sql = "INSERT INTO `forbes` (`" + cols + "`) "
+            sql = f"INSERT INTO `{table}` (`" + cols + "`) "
             sql += "VALUES (" + "%s,"*(len(row)-1) + "%s)"
             cursor.execute(sql, tuple(row))
             connection.commit()
     except:
-        err = "I can't create data at DB. " + str(date_now)
+        err = config['db_add']['err_add']
         mail(err)
         logining(err)
 
@@ -128,12 +130,11 @@ def start(now, end):
     """ Function for starting application """
     # Connecting to API and getting raw data
     while str(now) != str(end):
-        url = f'https://openexchangerates.org/api/historical/{str(end)}'
-        url += '.json?app_id=c54e441aec6c4f42a2cb17d81a675cae'
+        url = config['start']['url']
         try:
             data = requests.get(url)
         except:
-            err = "I can't get data on API. " + str(date_now)
+            err = config['start']['err_str']
             mail(err)
             logining(err)
             break
@@ -152,6 +153,6 @@ try:
     else:
         start(date_now, date_end)
 except:
-    err = "I can't start. " + str(date_now)
+    err = config['common']['err_com']
     mail(err)
     logining(err)
