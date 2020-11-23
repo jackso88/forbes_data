@@ -77,35 +77,26 @@ def db_add(df):
 
     cursor = connection.cursor()
     table = config['db_add']['table']
+    cols = "`,`".join([str(i) for i in df.columns.tolist()])
 
     # Deleting data from DB
     try:
         for i, row in df.iterrows():
             info = dict(row)
+            sql_del = f"DELETE FROM `{table}` WHERE date=%s"
+            sql_del += "AND country_id=%s;"
             cursor.execute(
-                f"DELETE FROM `{table}` WHERE date=%s", (info['date'])
+                sql_del, (info['date'], info['country_id'])
                 )
-            connection.commit()
+            sql = f"INSERT INTO `{table}` (`" + cols + "`) "
+            sql += "VALUES (%s, %s, %s);"
+            cursor.execute(sql, tuple(row))
     except:
         err = config['db_add']['err_del']
         mail(err)
         logining(err)
 
-    cols = "`,`".join([str(i) for i in df.columns.tolist()])
-
-    # Inserting data to DB
-    try:
-        for i, row in df.iterrows():
-            sql = f"INSERT INTO `{table}` (`" + cols + "`) "
-            sql += "VALUES (" + "%s,"*(len(row)-1) + "%s)"
-            cursor.execute(sql, tuple(row))
-            connection.commit()
-    except:
-        err = config['db_add']['err_add']
-        mail(err)
-        logining(err)
-
-    result = cursor.fetchall()
+    connection.commit()
     connection.close()
 
 
@@ -132,7 +123,6 @@ def clear_data(dt, date):
 def start(now, end):
     """ Function for starting application """
     # Connecting to API and getting raw data
-    logining()
     while str(now) != str(end):
         url = f"https://openexchangerates.org/api/historical/{str(end)}"
         url += f".json?app_id={str(config['start']['app_id'])}"
@@ -157,6 +147,7 @@ try:
         start(date_now, date_par)
     else:
         start(date_now, date_end)
+    logining()
 except:
     err = config['common']['err_com']
     mail(err)
