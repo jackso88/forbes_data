@@ -2,9 +2,8 @@ import requests
 import smtplib
 import pymysql
 import logging
+import csv
 import yaml
-import pandas as pd
-from sys import argv
 from string import Template
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -55,31 +54,6 @@ def mail(err):
     server.quit()
 
 
-def insert_sql(df):
-    """ Function for creating insert query"""
-    ins_sql = []
-    table = config['db_add']['table']
-    cols = "`,`".join([str(i) for i in df.columns.tolist()])
-    for i, row in df.iterrows():
-        sql = f"INSERT INTO `{table}` (`" + cols + "`) VALUES $s"
-        sql = Template(sql).substitute(s=tuple(row))
-        ins_sql.append(str(sql))
-    return(ins_sql)
-
-
-def delete_sql(df):
-    """ Function for creating delete query """
-    del_sql = []
-    table = config['db_add']['table']
-    for i, row in df.iterrows():
-        info = dict(row)
-        sql = f"DELETE FROM {table} WHERE date = '$s'"
-        sql = Template(sql).substitute(s=info['date'])
-        if sql not in del_sql:
-            del_sql.append(sql)
-    return(del_sql)
-
-
 def db_connect():
     """ Function for connecting to DB """
     # Connect to DB
@@ -92,42 +66,44 @@ def db_connect():
     return connection
 
 
-def db_add(connection, delete, insert):
-    """ Function for transfer data to DB """
-    cursor = connection.cursor()
-    cursor.execute('START TRANSACTION;')
-    for i in delete:
-        cursor.execute(i)
-    for i in insert:
-        cursor.execute(i)
-    cursor.execute('COMMIT;')
-    connection.commit()
-    connection.close()
-
-
-def clear_data(dt, date):
-    """ Creating dataframe from API response """
-    # Raw data processing
-    datas, cntr = [], []
-    for key, value in dt.items():
-        if key == 'rates':
-            for k, v in value.items():
-                datas.append(v)
-                cntr.append(k)
-
-    # Creating data frame
-    frame = {
-        "country_id": pd.Series(cntr, index=range(0, len(cntr))),
-        "value": pd.Series(datas, index=range(0, len(datas))),
-        "date": pd.Series(date, index=range(0, len(datas)))
-        }
-    df1 = pd.DataFrame(frame)
-    return df1
-
-
 def resp(url):
     """ Function for geting response"""
     # Connecting to API and getting raw data
     data = requests.get(url)
     response_dict = data.json()
     return response_dict
+
+    
+def save_csv(dt, date):
+    """ Function for convert from json to csv """
+    datas = []
+    for key, value in dt.items():
+        if key == 'rates':
+            for k, v in value.items():
+                row = str(k) + ',' + str(v) + ',' + date
+                datas.append(list(row.split(',')))
+    name = config['common']['path']
+    with open(name, 'a', newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',')
+        for line in datas:
+            writer.writerow(line)
+         
+            
+def clean_csv():
+    """ Function for cleaning CSV file """
+    name = config['common']['path']
+    with open(name, 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',')
+        writer.writerow('')
+
+
+def add_csv(connection):
+    """ Function for adding data from CSV file to DB """
+    cursor = connection.cursor()
+    sql = f"load data infile '{config['common']['path']}' replace "
+    sql += " into table "
+    sql += f"{config['db_add']['db']}.{config['db_add']['table']} "
+    sql += "fields terminated by ',' ignore 1 rows;"
+    cursor.execute(sql)
+    connection.commit()
+    connection.close()

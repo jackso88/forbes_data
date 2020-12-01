@@ -31,24 +31,24 @@ while str(date_now) != str(date_end):
             err = config['start']['err_str']
             ff.logining(err)
             ff.mail(err)
-        data_frame = ff.clear_data(response_dict, str(date_end))
-        insert = ff.insert_sql(data_frame)
-        delete = ff.delete_sql(data_frame)
-        try:
-            connect = ff.db_connect()
-        except:
-            err = config['db_add']['err_con']
-            ff.mail(err)
-            ff.logining(err)
-        try:
-            ff.db_add(connect, delete, insert)
-        except:
-            err = config['db_add']['err_add']
-            ff.mail(err)
-            ff.logining(err)
+        csv = ff.save_csv(response_dict, str(date_end))
         date_end += datetime.timedelta(days=1)
     except:
         err = config['common']['err_com']
         ff.mail(err)
         ff.logining(err)
         break
+
+try:
+    connect = ff.db_connect()
+except:
+    err = config['db_add']['err_con']
+    ff.mail(err)
+    ff.logining(err)
+try:
+    ff.add_csv(connect)
+except:
+    err = config['db_add']['err_add']
+    ff.mail(err)
+    ff.logining(err)
+ff.clean_csv()
