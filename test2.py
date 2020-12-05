@@ -22,22 +22,24 @@ if argv[1:]:
 
 # Starting app
 ff.logining()
+rates_list = []
 while str(date_now) != str(date_end):
     try:
         url = Template(config['start']['url']).substitute(date=date_end)
         try:
             response_dict = ff.resp(url)
-        except:
+        except Exception as e:
             err = config['start']['err_str']
             ff.logining(err)
-            ff.mail(err)
-        csv = ff.save_csv(response_dict, str(date_end))
+            ff.mail(err + e)
+        rates_list.extend(ff.transform_dict(response_dict['rates'], date_end))
         date_end += datetime.timedelta(days=1)
     except:
         err = config['common']['err_com']
         ff.mail(err)
         ff.logining(err)
         break
+ff.write_to_csv(rates_list)
 
 try:
     connect = ff.db_connect()

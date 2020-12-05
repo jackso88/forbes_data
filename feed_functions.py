@@ -74,19 +74,18 @@ def resp(url):
     return response_dict
 
     
-def save_csv(dt, date):
-    """ Function for convert from json to csv """
+def transform_dict(dt, date):
     datas = []
     for key, value in dt.items():
-        if key == 'rates':
-            for k, v in value.items():
-                row = str(k) + ',' + str(v) + ',' + date
-                datas.append(list(row.split(',')))
+        datas.append([str(key),str(value),str(date)])
+    return datas
+
+
+def write_to_csv(datas):
     name = config['common']['path']
-    with open(name, 'a', newline='') as csv_file:
-        writer = csv.writer(csv_file, delimiter=',')
-        for line in datas:
-            writer.writerow(line)
+    with open(name, 'a') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        writer.writerows(datas)
          
             
 def clean_csv():
