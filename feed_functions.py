@@ -14,10 +14,6 @@ from email.mime.image import MIMEImage
 # Reading configuration file
 with open("config.yaml", "r") as f:
     config = yaml.load(f)
-    
-# Default time slice
-date_now = datetime.datetime.now().date()
-date_end = date_now - datetime.timedelta(days=config['common']['days'])
 
 def logining(txt=str('Program started. ')):
     """ Function for loginning """
@@ -33,7 +29,7 @@ def logining(txt=str('Program started. ')):
         logging.error(txt)
 
 
-def mail(err):
+def mail(err, date_now, date_end):
     """ Function for sending mail """
     # Data for autorization
     addr_from = config['mail']['addr_from']
