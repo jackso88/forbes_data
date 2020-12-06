@@ -5,3 +5,10 @@ logs
 # Ignore Configs
 configs
 *.yaml
+
+# Ignore linux script
+commands
+*.sh
+
+# Ignore cache folder
+__pycache__/
