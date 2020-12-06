@@ -49,7 +49,7 @@ data = read_from_DB(connect)
 dict_d = transform_data(data)
 
 line_chart = pygal.Line()
-line_chart.title = 'Data visualizing for last month'
+line_chart.title = 'Data visualization for last month'
 line_chart.x_labels = map(str, dict_d['dates'])
 for key, value in dict_d.items():
     if key != 'dates':
