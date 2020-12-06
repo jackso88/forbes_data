@@ -1,6 +1,7 @@
 import requests
 import smtplib
 import pymysql
+import datetime
 import logging
 import csv
 import yaml
@@ -13,6 +14,10 @@ from email.mime.image import MIMEImage
 # Reading configuration file
 with open("config.yaml", "r") as f:
     config = yaml.load(f)
+    
+# Default time slice
+date_now = datetime.datetime.now().date()
+date_end = date_now - datetime.timedelta(days=config['common']['days'])
 
 def logining(txt=str('Program started. ')):
     """ Function for loginning """
