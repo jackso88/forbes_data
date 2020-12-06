@@ -1,7 +1,6 @@
 import requests
 import smtplib
 import pymysql
-import datetime
 import logging
 import csv
 import yaml
