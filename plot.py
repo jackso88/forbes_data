@@ -21,7 +21,8 @@ def read_from_DB(connection):
     table = config['db_add']['table']
     cursor = connection.cursor()
     sql = f"select * from {table} where date >= '{str(date_end)}' "
-    sql += "and value between 5 and 10;"
+    sql += f"and value between (select avg(value) from {table})*0.6 "
+    sql += f"and (select avg(value) from {table})*1.4;"
     cursor.execute(sql)
     connection.commit()
     result = cursor.fetchall()
@@ -29,7 +30,7 @@ def read_from_DB(connection):
     return result
 
 def transform_data(data_t):
-    """ Function for preparing data to visualize """
+    """ Data preparation function for visualization """
     datas = {}
     date = []
     for element in data_t:
@@ -51,6 +52,6 @@ line_chart = pygal.Line()
 line_chart.title = 'Data visualizing for last month'
 line_chart.x_labels = map(str, dict_d['dates'])
 for key, value in dict_d.items():
-    if key not in['dates']:
+    if key != 'dates':
         line_chart.add(key, value)
 line_chart.render_to_file('bar_chart.svg')
