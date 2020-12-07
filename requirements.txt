@@ -6,4 +6,5 @@ logging
 sys
 yaml
 string
+pygal
 

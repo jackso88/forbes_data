@@ -22,7 +22,7 @@ def read_from_DB(connection):
     cursor = connection.cursor()
     sql = f"select * from {table} where date >= '{str(date_end)}' "
     sql += f"and value between (select avg(value) from {table})*0.6 "
-    sql += f"and (select avg(value) from {table})*1.4;"
+    sql += f"and (select avg(value) from {table});"
     cursor.execute(sql)
     connection.commit()
     result = cursor.fetchall()

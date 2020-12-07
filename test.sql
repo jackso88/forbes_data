@@ -34,8 +34,8 @@ DELETE FROM dates WHERE date <= CURDATE();
 -- Сhecking data for deviations
 WITH
 	avg_rows AS (SELECT AVG(A.cnt) AS a_rows FROM (SELECT COUNT(*) AS cnt 
-				                              FROM forbes
-	                                          GROUP BY date) A),
+				                                   FROM forbes
+	                                               GROUP BY date) A),
 	date_diff AS (SELECT DATEDIFF(CURDATE(), (SELECT date 
 										      FROM forbes 
 										      ORDER BY 1 LIMIT 1)) AS d_diff),
