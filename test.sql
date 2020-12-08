@@ -19,9 +19,8 @@ DELIMITER $$
 USE `test`$$
 CREATE PROCEDURE `calendar`(str_date date, end_date date)
 BEGIN
-SET str_date = IF(str_date IN (SELECT date from calendar), (SELECT MAX(date) FROM calendar), str_date);
-SET end_date = IF(end_date IN (SELECT date from calendar), DATE_ADD(str_date, interval -1 day), end_date);
 	WHILE str_date <= end_date DO
+		IF str_date NOT IN (SELECT date FROM calendar) THEN
 		INSERT INTO calendar VALUES(str_date, 
         DAYOFMONTH(str_date), MONTH(str_date), YEAR(str_date), DAYNAME(str_date),
         MONTHNAME(str_date), 
@@ -32,13 +31,14 @@ SET end_date = IF(end_date IN (SELECT date from calendar), DATE_ADD(str_date, in
         IF(MONTH(str_date)/3 >= 2 AND MONTH(str_date)/3 < 3, 3, 4))),
         IF(DAYNAME(str_date) LIKE 'SUNDAY' 
         OR DAYNAME(str_date) LIKE 'SATURDAY', 'YES', 'NO'));
+        END IF;
         SET str_date = DATE_ADD(str_date, interval 1 day);
 	END WHILE;
 END;$$
 DELIMITER ;
 
 -- Filling table with dates
-CALL calendar('2019-01-01', '2022-12-31');
+CALL calendar('2018-12-01', '2023-01-02');
 
 -- Checking data for missing dates
 SELECT calendar.date FROM calendar
@@ -62,3 +62,12 @@ WITH
 SELECT CASE WHEN tot/d_diff BETWEEN a_rows * 0.9 AND a_rows * 1.1 THEN 'OK' ELSE 'WARNING' END AS rows_cnt,
 	   CASE WHEN day_cnt = d_diff THEN 'OK' ELSE 'WARNING' END AS days_cnt
 FROM avg_rows, date_diff, total, days t;
+
+
+
+
+
+
+
+
+
