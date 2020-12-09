@@ -9,10 +9,11 @@ from sys import argv
 # Reading configuration file
 with open("config.yaml", "r") as f:
     config = yaml.load(f)
-    
+
 # Default time slice
 date_now = datetime.now().date()
 date_end = date_now - timedelta(days=config['common']['days_draw'])
+
 
 def read_from_DB(connection, sql):
     """ Function for reading data from DB """
@@ -34,16 +35,21 @@ def visual_data(data):
 
 
 txt = "\nEnter 'average' for average value drawing or "
-txt += "country code for visualisation data "
+txt += "country code for visualisation data. For currency count visuali"
+txt += "zation enter 'count' "
 
 option = input(txt)
 
 table = config['db_add']['table']
-    
+
 if option == 'average':
     sql = f"select avg(value), date from {table} group by 2 order by 2 "
     sql += f"desc limit {config['common']['days_draw']}"
-    
+
+elif option == 'count':
+    sql = f"select count(country_id), date from {table} group by date "
+    sql += f"order by 2 desc limit {config['common']['days_draw']}"
+
 elif len(option) == 3:
     sql = f"select value, date from {table} where country_id = '{option}'"
     sql += f" order by date desc limit {config['common']['days_draw']}"
@@ -51,4 +57,3 @@ elif len(option) == 3:
 connect = ff.db_connect()
 data = read_from_DB(connect, sql)
 visual_data(data)
-    
