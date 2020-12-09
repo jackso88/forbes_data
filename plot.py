@@ -8,7 +8,7 @@ from sys import argv
 
 # Reading configuration file
 with open("config.yaml", "r") as f:
-    config = yaml.load(f)
+    config = yaml.safe_load(f)
 
 # Default time slice
 date_now = datetime.now().date()
@@ -34,8 +34,8 @@ def visual_data(data):
     line_chart.render_to_file('chart.svg')
 
 
-txt = "\nEnter 'average' for average value drawing or "
-txt += "country code for visualisation data. For currency count visuali"
+txt = "Enter 'average' for average value drawing or three-digit "
+txt += "country code for visualization data.\nFor currency count visuali"
 txt += "zation enter 'count' "
 
 option = input(txt)

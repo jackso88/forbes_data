@@ -7,7 +7,7 @@ from string import Template
 
 # Reading configuration file
 with open("config.yaml", "r") as f:
-    config = yaml.load(f)
+    config = yaml.safe_load(f)
 
 # Default time slice
 date_now = datetime.datetime.now().date()
