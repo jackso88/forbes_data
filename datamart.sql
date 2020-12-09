@@ -8,9 +8,7 @@ FROM
             (MAX(value)-AVG(value))+ABS(MIN(value)-AVG(value)) AS avg,
             WEEK(date) AS week
             FROM forbes
-            GROUP BY country_id, WEEK(date))a
-GROUP BY 1, 3
-ORDER BY 3 DESC;
+            GROUP BY country_id, WEEK(date))a;
 
 CREATE VIEW dFluct AS
 SELECT b.country_id, 
