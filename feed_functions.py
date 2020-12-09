@@ -96,13 +96,11 @@ def clean_csv():
         writer.writerow('')
 
 
-def add_csv(connection):
-    """ Function for adding data from CSV file to DB """
+def query_DB(connection, sql):
+    """ Function for DB queries """
     cursor = connection.cursor()
-    sql = f"load data infile '{config['common']['path']}' replace "
-    sql += " into table "
-    sql += f"{config['db_add']['db']}.{config['db_add']['table']} "
-    sql += "fields terminated by ',' ignore 1 rows;"
     cursor.execute(sql)
     connection.commit()
+    result = cursor.fetchall()
     connection.close()
+    return result

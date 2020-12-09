@@ -47,8 +47,14 @@ except:
     err = config['db_add']['err_con']
     ff.mail(err, date_now, date_end)
     ff.logining(err)
+    
+sql = f"load data infile '{config['common']['path']}' replace "
+sql += " into table "
+sql += f"{config['db_add']['db']}.{config['db_add']['table']} "
+sql += "fields terminated by ',' ignore 1 rows;"
+
 try:
-    ff.add_csv(connect)
+    ff.query_DB(connect, sql)
 except:
     err = config['db_add']['err_add']
     ff.mail(err, date_now, date_end)

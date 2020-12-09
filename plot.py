@@ -18,15 +18,6 @@ txt_day = "\nHow many last days should I visualize? "
 
 day = input(txt_day)
 
-def read_from_DB(connection, sql):
-    """ Function for reading data from DB """
-    cursor = connection.cursor()
-    cursor.execute(sql)
-    connection.commit()
-    result = cursor.fetchall()
-    connection.close()
-    return result
-
 
 def visual_data(data):
     """ Data visualization """
@@ -52,5 +43,5 @@ elif len(option) == 3:
     sql += f" order by date desc limit {day}"
 
 connect = ff.db_connect()
-data = read_from_DB(connect, sql)
+data = ff.query_DB(connect, sql)
 visual_data(data)
