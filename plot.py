@@ -10,9 +10,9 @@ from sys import argv
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
-txt = "Enter 'average' for average value drawing or three-digit "
-txt += "country code for visualization data.\nFor currency count visuali"
-txt += "zation enter 'count' "
+txt = "For average value drawing enter 'average'\nFor country specific"
+txt += " visualization enter three-digit country code\nFor currency "
+txt += "count visualization enter 'count' "
 
 option = input(txt)
 
