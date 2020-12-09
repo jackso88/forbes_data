@@ -13,6 +13,13 @@ with open("config.yaml", "r") as f:
 date_now = datetime.datetime.now().date()
 date_end = date_now - datetime.timedelta(days=config['common']['days'])
 
+# Getting variables from config
+path = config['common']['path']
+db = config['db_add']['db']
+table = config['db_add']['table']
+sql = Template(config['start']['sql']).substitute(path=path, db=db, \
+table=table)
+
 # Parameter processing
 if argv[1:]:
     date_par = ''.join([str(i) for i in argv[1:]])
@@ -32,7 +39,8 @@ while str(date_now) != str(date_end):
             err = config['start']['err_str']
             ff.logining(err)
             ff.mail(err + e, date_now, date_end)
-        rates_list.extend(ff.transform_dict(response_dict['rates'], date_end))
+        rates_list.extend(ff.transform_dict(response_dict['rates'], \
+        date_end))
         date_end += datetime.timedelta(days=1)
     except:
         err = config['common']['err_com']
@@ -47,12 +55,6 @@ except:
     err = config['db_add']['err_con']
     ff.mail(err, date_now, date_end)
     ff.logining(err)
-    
-sql = f"load data infile '{config['common']['path']}' replace "
-sql += " into table "
-sql += f"{config['db_add']['db']}.{config['db_add']['table']} "
-sql += "fields terminated by ',' ignore 1 rows;"
-
 try:
     ff.query_DB(connect, sql)
 except:
