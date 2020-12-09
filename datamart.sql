@@ -5,7 +5,7 @@ SELECT a.country_id,
        DENSE_RANK() OVER(PARTITION BY a.week ORDER BY a.avg) AS place 
 FROM 
     (SELECT country_id, 
-		    (MAX(value)-AVG(value))+ABS(MIN(value)-AVG(value)) AS avg,
+            (MAX(value)-AVG(value))+ABS(MIN(value)-AVG(value)) AS avg,
             WEEK(date) AS week
             FROM forbes
             GROUP BY country_id, WEEK(date))a
@@ -23,6 +23,6 @@ SELECT b.country_id,
                date FROM forbes,
                (SELECT country_id, 
                        AVG(value) AS avg 
-				FROM forbes
+                FROM forbes
                 GROUP BY 1)a
         WHERE forbes.country_id = a.country_id)b
