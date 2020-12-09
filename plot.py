@@ -2,8 +2,6 @@ import yaml
 import pymysql
 import pygal
 import feed_functions as ff
-from datetime import datetime, timedelta
-from sys import argv
 
 
 # Reading configuration file
