@@ -21,11 +21,10 @@ if argv[1:]:
     if argv[1] == 'count':
         sql = Template(config['plot']['sql2']).substitute(table=table, \
         day=day)
-        option = 'count'
     elif len(argv[1]) == 3:
         sql = Template(config['plot']['sql3']).substitute(table=table, \
         day=day, option=argv[1])
-        option = argv[1]
+    option = argv[1]
 
 
 def visual_data(data):
