@@ -4,7 +4,7 @@ SELECT country_id,
        calendar.week_num,
        DENSE_RANK() OVER(PARTITION BY calendar.week_num 
        ORDER BY ABS(1-(MAX(value)/AVG(value)))+ABS((MIN(value)/AVG(value))-1)) AS place
-       FROM forbes
+FROM forbes
 JOIN calendar ON calendar.date = forbes.date
 GROUP BY 1, 3;
 
