@@ -15,7 +15,7 @@ SELECT a.country_id,
        DENSE_RANK() OVER(PARTITION BY calendar.date 
        ORDER BY ABS((a.next_val-a.value)/a.value)) AS place
 FROM
-	(SELECT country_id,
+    (SELECT country_id,
             LEAD(value) OVER(ORDER BY value) AS next_val,
             value, 
             date FROM forbes)a
