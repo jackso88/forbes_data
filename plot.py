@@ -33,7 +33,7 @@ def visual_data(data):
     line_chart.add('value', [i[0] for i in data[::-1]])
     line_chart.render_to_file('chart.svg')
 
-# Fuctions calling
+# Functions calling
 connect = ff.db_connect()
 data = ff.query_DB(connect, sql)
 visual_data(data)

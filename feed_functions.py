@@ -68,13 +68,13 @@ def db_connect():
 
 def resp(url):
     """ Function for geting response"""
-    # Connecting to API and getting raw data
     data = requests.get(url)
     response_dict = data.json()
     return response_dict
 
     
 def transform_dict(dt, date):
+    """ Function for data transformation """
     datas = []
     for key, value in dt.items():
         datas.append([str(key),str(value),str(date)])
@@ -82,6 +82,7 @@ def transform_dict(dt, date):
 
 
 def write_to_csv(datas):
+    """ Function for writing data to CSV file """
     name = config['common']['path']
     with open(name, 'a') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', \
