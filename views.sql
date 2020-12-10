@@ -10,11 +10,11 @@ GROUP BY 1, 3;
 
 CREATE VIEW dFluct AS
 SELECT a.country_id, 
-       ABS((a.next_val-value)/value) AS delta, 
+       ABS((a.next_val-value)/value) AS delta_coef, 
        calendar.date, 
        DENSE_RANK() OVER(PARTITION BY calendar.date ORDER BY ABS((a.next_val-value)/value)) AS place
 FROM
-	(SELECT forbes.country_id,
+    (SELECT country_id,
             LEAD(value) OVER(ORDER BY value) AS next_val,
             value, 
             date FROM forbes)a
