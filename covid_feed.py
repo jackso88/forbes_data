@@ -21,7 +21,7 @@ path = config['common']['path']
 db = config['db_add']['db']
 table = config['covid']['table']
 sql = Template(config['covid']['sql']).substitute(path=path, db=db, \
-table=table)    
+               table=table)    
 
 where = urllib.parse.quote_plus("""
 {
@@ -35,18 +35,22 @@ where = urllib.parse.quote_plus("""
 """)
 
 where = re.sub(r'2020-12-01', '2020-12-01', where)\
-.replace('2020-12-01', f'{str(date_end)}') 
-print(where)
+        .replace('2020-12-01', f'{str(date_end)}') 
+
 url = config['covid']['url'] % where
 
 headers = {
     'X-Parse-Application-Id': f"{config['covid']['app_id']}",
     'X-Parse-REST-API-Key': f"{config['covid']['api_key']}"
 }
-row_data = json.loads(requests.get(url, headers=headers).\
-content.decode('utf-8'))
 
-datas = []
+try:
+    row_data = json.loads(requests.get(url, headers=headers).\
+    content.decode('utf-8'))
+except Exception as e:
+    err = config['start']['err_str']
+    ff.logining(err)
+    ff.mail(err + e, date_now, date_end)
 
 
 def transform_data(data):
@@ -71,9 +75,21 @@ def transform_data(data):
             str(i['date']['iso'][:10])])
     return clean_data
  
-# Calling funtions          
+# Calling funtions 
+ff.logining()
+datas = []
 datas.extend(transform_data(row_data['results']))
 ff.write_to_csv(datas)
-connect = ff.db_connect()
-ff.query_DB(connect, sql)
+try:
+    connect = ff.db_connect()
+except:
+    err = config['db_add']['err_con']
+    ff.mail(err, date_now, date_end)
+    ff.logining(err)
+try:
+    ff.query_DB(connect, sql)
+except:
+    err = config['db_add']['err_add']
+    ff.mail(err, date_now, date_end)
+    ff.logining(err)
 ff.clean_csv()
