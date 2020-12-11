@@ -8,6 +8,7 @@ CREATE TABLE calendar (
     `year` INT,
     `day_name` NVARCHAR(45),
     `month_name` NVARCHAR(45),
+    `week_num` INT,
     `decade` INT,
     `quarter` INT,
     `weekend` NVARCHAR(45),
@@ -26,7 +27,8 @@ BEGIN
             MONTH(str_date), 
             YEAR(str_date), 
             DAYNAME(str_date),
-            MONTHNAME(str_date), 
+            MONTHNAME(str_date),
+            WEEK(str_date),
             IF(DAYOFMONTH(str_date)/10 < 1, 1, 
 	            IF(DAYOFMONTH(str_date)/10 >= 1 AND DAYOFMONTH(str_date)/10 <2, 2, 3)),
             IF(MONTH(str_date)/3 < 1, 1, 
@@ -40,4 +42,5 @@ END;$$
 DELIMITER ;
  
 -- Filling table with dates
-CALL calendar('2018-12-01', '2023-01-02');
+CALL calendar('2019-01-01', '2022-12-31');
+
