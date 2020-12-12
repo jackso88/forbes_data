@@ -1,3 +1,5 @@
+USE test;
+
 CREATE VIEW wFluct AS
 SELECT country_id, 
        (MAX(value)-MIN(value))/AVG(value) AS delta_coef,
@@ -10,13 +12,16 @@ GROUP BY 1, 3;
 
 CREATE VIEW dFluct AS
 SELECT a.country_id, 
-       ABS((a.next_val-a.value)/a.value) AS delta_coef, 
+       ABS((a.prev_val-a.value)/(a.value+a.prev_val)/2) AS delta_coef, 
        calendar.date, 
        DENSE_RANK() OVER(PARTITION BY calendar.date 
-       ORDER BY ABS((a.next_val-a.value)/a.value)) AS place
+       ORDER BY ABS((a.prev_val-a.value)/(a.value+a.prev_val)/2)) AS place
 FROM
     (SELECT country_id,
-            LEAD(value) OVER(ORDER BY value) AS next_val,
+            CASE WHEN LAG(value) OVER(ORDER BY value) IS NULL 
+                 THEN LEAD(value) OVER(ORDER BY value)
+                 ELSE LAG(value) OVER(ORDER BY value) END AS prev_val,
             value, 
-            date FROM forbes)a
+            date 
+	 FROM forbes)a
 JOIN calendar ON calendar.date = a.date;

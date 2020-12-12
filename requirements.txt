@@ -1,4 +1,3 @@
-pandas
 pymysql
 requests
 datetime
@@ -7,4 +6,6 @@ sys
 yaml
 string
 pygal
+json
+urllib
 
