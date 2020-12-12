@@ -23,5 +23,5 @@ FROM
                  ELSE LAG(value) OVER(ORDER BY value) END AS prev_val,
             value, 
             date 
-	 FROM forbes)a
+     FROM forbes)a
 JOIN calendar ON calendar.date = a.date;
