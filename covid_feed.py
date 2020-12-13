@@ -7,7 +7,6 @@ import feed_functions as ff
 from string import Template
 
 
-
 # Reading configuration file
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
