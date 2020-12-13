@@ -5,7 +5,7 @@ SELECT country_id,
        (MAX(value)-MIN(value))/AVG(value) AS delta_coef,
        calendar.week_num,
        DENSE_RANK() OVER(PARTITION BY calendar.week_num 
-       ORDER BY ABS(1-(MAX(value)/AVG(value)))+ABS((MIN(value)/AVG(value))-1)) AS place
+       ORDER BY (MAX(value)-MIN(value))/AVG(value)) AS place
 FROM forbes
 JOIN calendar ON calendar.date = forbes.date
 GROUP BY 1, 3;
@@ -18,10 +18,8 @@ SELECT a.country_id,
        ORDER BY ABS((a.prev_val-a.value)/(a.value+a.prev_val)/2)) AS place
 FROM
     (SELECT country_id,
-            CASE WHEN LAG(value) OVER(ORDER BY value) IS NULL 
-                 THEN LEAD(value) OVER(ORDER BY value)
-                 ELSE LAG(value) OVER(ORDER BY value) END AS prev_val,
+            ROUND(LAG(value) OVER(PARTITION BY country_id ORDER BY date),5) AS prev_val,
             value, 
             date 
-     FROM forbes)a
+	 FROM forbes)a
 JOIN calendar ON calendar.date = a.date;

@@ -24,6 +24,8 @@ if argv[1:]:
     elif len(argv[1]) == 3:
         sql = Template(config['plot']['sql3']).substitute(table=table, \
         day=day, option=argv[1])
+    else:
+        sql = argv[1]
     option = argv[1]
 
 
