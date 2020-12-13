@@ -4,6 +4,7 @@ import urllib
 import requests
 import datetime
 import feed_functions as ff
+from string import Template
 
 
 
