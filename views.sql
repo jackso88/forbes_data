@@ -21,5 +21,5 @@ FROM
             ROUND(LAG(value) OVER(PARTITION BY country_id ORDER BY date),5) AS prev_val,
             value, 
             date 
-	 FROM forbes)a
+     FROM forbes)a
 JOIN calendar ON calendar.date = a.date;
