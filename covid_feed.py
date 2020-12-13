@@ -3,9 +3,8 @@ import yaml
 import urllib
 import requests
 import datetime
-import re
 import feed_functions as ff
-from string import Template
+
 
 
 # Reading configuration file
@@ -23,19 +22,16 @@ table = config['covid']['table']
 sql = Template(config['covid']['sql']).substitute(path=path, db=db, \
                table=table)    
 
-where = urllib.parse.quote_plus("""
-{
+tt = {
     "date": {
         "$gte": {
             "__type": "Date",
-            "iso": "2020-12-01T01:03:37.625"
+            "iso": date_end.strftime("%Y-%m-%dT00:00:00.000")
         }
     }
 }
-""")
 
-where = re.sub(r'2020-12-01', '2020-12-01', where)\
-        .replace('2020-12-01', f'{str(date_end)}') 
+where = urllib.parse.quote_plus(json.dumps(tt))
 
 url = config['covid']['url'] % where
 
