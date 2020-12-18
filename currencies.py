@@ -47,6 +47,8 @@ def currency(resp_dict, country):
                 for i in el:
                     if i[:7] in value:
                         clear_data.append([str(key), str(value), str(i)])
+        if key not in [i[0] for i in clear_data]:
+            clear_data.append([str(key), str(value), 'NULL'])
     return clear_data
 
 response_dict = ff.resp(url)
@@ -56,7 +58,6 @@ data = currency(response_dict, countries)
 ff.write_to_csv(data)
 connect = ff.db_connect() 
 ff.query_DB(connect, sql)
-ff.clean_csv()
 
 
     
