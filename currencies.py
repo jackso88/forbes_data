@@ -20,13 +20,8 @@ def currency(resp_dict, country):
     """ preparing response API """
     clear_data = []
     for key, value in response_dict.items():
-        clear_data.append([str(key), str(value), 'NULL'])
-        for el in country:
-            for i in el:
-                if i[:4] in value[:4]:
-                    clear_data.append([str(key), str(value), i])
         if key == 'AED':
-            clear_data.append([str(key), str(value), 'Arab Emirates'])
+            clear_data.append([str(key), str(value), 'United Arab Emirates'])
         elif key == 'GBP':
             clear_data.append([str(key), str(value), 'Greate Britain'])
         elif key == 'KPW':
@@ -40,11 +35,18 @@ def currency(resp_dict, country):
         elif key == 'TRY':
             clear_data.append([str(key), str(value), 'Turkey'])
         elif key == 'TWD':
-            clear_data.append([str(key), str(value), 'Taiwan'])
+            clear_data.append([str(key),str(value),'Taiwan'])
         elif key == 'ZAR':
-            clear_data.append([str(key), str(value), 'South Africa'])
+            clear_data.append([str(key),str(value),'South Africa'])
         elif key == 'AUD':
-            clear_data.append([str(key), str(value), 'Australia'])
+            clear_data.append([str(key),str(value),'Australia'])
+        elif key == 'USD':
+            clear_data.append([str(key),str(value),'United States'])
+        else:
+            for el in country:
+                for i in el:
+                    if i[:7] in value:
+                        clear_data.append([str(key), str(value), str(i)])
     return clear_data
 
 response_dict = ff.resp(url)
