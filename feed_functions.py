@@ -86,7 +86,7 @@ def write_to_csv(datas):
     name = config['common']['path']
     with open(name, 'a') as csv_file:
         writer = csv.writer(csv_file, delimiter=',', \
-        quoting=csv.QUOTE_MINIMAL)
+        lineterminator='\n', quoting=csv.QUOTE_MINIMAL)
         writer.writerows(datas)
          
             
