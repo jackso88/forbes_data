@@ -14,11 +14,12 @@ date_now = datetime.datetime.now().date()
 date_end = date_now - datetime.timedelta(days=config['common']['days'])
 
 # Getting variables from config
-path = config['common']['path']
-db = config['db_add']['db']
-table = config['db_add']['table']
-sql = Template(config['start']['sql']).substitute(path=path, db=db, \
-table=table)
+kwargs = {
+    'path': config['common']['path'],
+    'db':  config['db_add']['db'],
+    'table': config['db_add']['table']
+    }
+sql = Template(config['start']['sql']).substitute(**kwargs)
 
 # Parameter processing
 if argv[1:]:

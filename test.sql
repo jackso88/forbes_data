@@ -4,9 +4,6 @@ LEFT JOIN forbes on forbes.date = calendar.date
 WHERE forbes.date IS NULL AND calendar.date < CURDATE()
 AND calendar.date >= (SELECT MIN(date) FROM forbes);
 
--- Clearing dates list
-DELETE FROM calendar WHERE date <= CURDATE();
-
 -- Сhecking data for deviations
 WITH
     avg_rows AS (SELECT AVG(A.cnt) AS a_rows FROM (SELECT COUNT(*) AS cnt FROM forbes
