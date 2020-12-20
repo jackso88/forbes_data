@@ -6,13 +6,14 @@ from string import Template
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
-path = config['common']['path']
-db = config['db_add']['db']
-table = config['currencies']['table']
-sql = Template(config['currencies']['sql']).substitute(path=path, db=db, \
-table=table)
-sql2 = Template(config['currencies']['sql2']).substitute(path=path, db=db, \
-table=table)
+kwargs = {
+    'path': config['common']['path'],
+    'db': config['db_add']['db'],
+    'table': config['currencies']['table']
+    }
+    
+sql = Template(config['currencies']['sql']).substitute(**kwargs)
+sql2 = Template(config['currencies']['sql2']).substitute(**kwargs)
 url = config['currencies']['url']  
 
 
