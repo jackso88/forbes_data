@@ -45,3 +45,4 @@ def visual_data(data,**kwargs):
 connect = ff.db_connect()
 data = ff.query_DB(connect, sql)
 visual_data(data, **kwargs)
+

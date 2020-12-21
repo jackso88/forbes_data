@@ -11,17 +11,18 @@ from string import Template
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
-# Default time slice
-date_now = datetime.datetime.now().date()
-date_end = date_now - datetime.timedelta(days=config['common']['days'])
-
 # Getting variables from config
 kwargs = {
     'path':config['common']['path'],
     'db': config['db_add']['db'],
-    'table': config['covid']['table']
+    'table': config['covid']['table'],
+    'days': config['common']['days']
     }
-sql = Template(config['covid']['sql']).substitute(**kwargs)    
+sql = Template(config['covid']['sql']).substitute(**kwargs)
+
+# Default time slice
+date_now = datetime.datetime.now().date()
+date_end = date_now - datetime.timedelta(kwargs['days'])
 
 tt = {
     "date": {
