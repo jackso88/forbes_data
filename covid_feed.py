@@ -19,6 +19,7 @@ kwargs = {
     'days': config['common']['days']
     }
 sql = Template(config['covid']['sql']).substitute(**kwargs)
+sql2 = config['covid']['sql']
 
 # Default time slice
 date_now = datetime.datetime.now().date()
@@ -91,3 +92,15 @@ except:
     ff.mail(err, date_now, date_end)
     ff.logining(err)
 ff.clean_csv()
+try:
+    connect = ff.db_connect()
+except:
+    err = config['db_add']['err_con']
+    ff.mail(err, date_now, date_end)
+    ff.logining(err)
+try:
+    ff.query_DB(connect, sql2)
+except:
+    err = config['db_add']['err_add']
+    ff.mail(err, date_now, date_end)
+    ff.logining(err)
