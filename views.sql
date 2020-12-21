@@ -22,4 +22,15 @@ FROM
             date 
      FROM forbes)a;
 
-
+CREATE VIEW cov_cur AS
+SELECT country_id, 
+       value, 
+       forbes.date, 
+       a.active_cases 
+FROM forbes
+LEFT JOIN currencies ON currencies.cur_id = forbes.country_id
+LEFT JOIN (SELECT country_name, 
+				  date, 
+                  confirmed-deaths-recovered AS active_cases 
+           FROM covid)a
+ON a.country_name = currencies.country AND a.date = forbes.date
