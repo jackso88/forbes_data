@@ -19,7 +19,7 @@ kwargs = {
     'days': config['common']['days']
     }
 sql = Template(config['covid']['sql']).substitute(**kwargs)
-sql2 = config['covid']['sql']
+sql2 = config['covid']['sql2']
 
 # Default time slice
 date_now = datetime.datetime.now().date()
